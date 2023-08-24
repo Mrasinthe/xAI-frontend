@@ -1,7 +1,15 @@
 {% extends "base.html" %} {% block title %}Login{% endblock %} {% block content %}
+
+{% if user.is_authenticated %}
+<div class="container3" style="font-family: 'Bahnschrift Light Condensed', sans-serif ;text-transform: uppercase;">
+<a href="/userRole" style="color: white;" >Back</a>
+</div><br />
+{% endif %}
 <section class="vh-80">
+ 
     <!-- <div class="container h-100" > -->
       <div class="row justify-content-center " >
+      
         <div class="col-lg-12 col-xl-11" >
           <div class="card text-white p-md-5" style="background-color:   #787A91; border-radius: 25px">
             <div class="card-body p-md-5">

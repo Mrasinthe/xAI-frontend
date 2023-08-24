@@ -8,6 +8,10 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['GET','POST'])
 def login():
+    if current_user.is_authenticated:
+        # If user is already logged in, redirect to a different page
+        return redirect(url_for('views.select_role'))  # Change 'dashboard' to your desired route
+
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -39,6 +43,10 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    if current_user.is_authenticated:
+        # If user is already logged in, redirect to a different page
+        return redirect(url_for('views.select_role')) 
+        
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('firstName')

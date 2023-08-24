@@ -8,6 +8,10 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
+    if current_user.is_authenticated:
+        # If user is already logged in, redirect to a different page
+        return redirect(url_for('views.select_role')) 
+        
     return render_template("home.html",user=current_user)
 
 
@@ -23,7 +27,7 @@ def select_role():
     return render_template('userRole.html',user=current_user)
 
     
-@views.route('/MainPage',methods=['GET', 'POST'])
+@views.route('/XAI',methods=['GET', 'POST'])
 @login_required
 def mainPage():
     user_role = request.args.get('user_role')
