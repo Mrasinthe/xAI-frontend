@@ -1,0 +1,472 @@
+{% extends "base.html" %} {% block title %}Explanations{% endblock %} {% block content
+%}
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Results for Role: {{ user_role }}</title>
+    <style>
+        /* Reset some default styles for better consistency */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Add background color to the body */
+        body {
+            background-color: #00134d;
+        }
+
+        /* Add styles for the header */
+        header {
+            color: white;
+            text-align: left;
+            text-shadow:
+                /* Bottom-left */
+                1px 1px 0 black;
+            font-family: "Bahnschrift Light Condensed", sans-serif;
+            text-transform: uppercase;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        /* Add styles for the main content area */
+        main {
+            padding: 10px;
+        }
+
+        /* Customize the container and inner-container styles */
+        .container {
+            background-color: #00134d;
+            padding: 20px;
+            margin: 10px auto;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            outline: white;
+        }
+
+
+        /* .inner-container {
+            /* background-color: #00134d;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 5px; 
+        } */
+
+        /* Customize the column style */
+        .col-sm {
+            border: 1px solid #ccc;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        /* Add styles for the image container */
+        .image-container {
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Add styles for the metrics titles */
+        h2 {
+            color: #333;
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        p {
+            color: black;
+            margin-top: 0;
+            font-family: "Bahnschrift Light Condensed", sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* Add styles for the additional columns in the third row */
+        .col-sm.text-center {
+            background-color: #787A91;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        /* Add media query for responsive design */
+        @media (max-width: 768px) {
+            .col-sm {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .row.justify-content-center .col-sm.text-center {
+                width: 100%;
+            }
+
+            .col-sm-6.text-center {
+                width: 100%;
+            }
+        }
+
+        .image-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-popup img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Add styles for the tab header */
+        .tab-header {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: left;
+            margin-top: 10px;
+        }
+
+        .tab-header-item {
+            cursor: pointer;
+            padding: 10px 20px;
+            background-color: #787A91;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            font-family: "Bahnschrift Light Condensed", sans-serif;
+            text-transform: uppercase;
+        }
+
+        .tab-header-item.active {
+            background-color:  #EEEEEE;
+            color: black;
+
+        }
+
+        .tab-header-item:hover {
+            background-color: #007399;
+        }
+
+        /* .tab-content {
+            /* display: none;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+        } */
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <header>
+            <h5> <b>Results for Role: {{ user_role }}</b></h5>
+        </header>
+        <!-- Left Column -->
+
+        <div class="text-center" style="outline: white;">
+            <ul class="tab-header">
+                <li class="tab-header-item active" data-tab="xaiMetrics"><b> XAI Metrics</b></li>
+                <li class="tab-header-item" data-tab="metric2"><b> Metric 2</b></li>
+                <li class="tab-header-item" data-tab="metric3"><b> Metric 3</b></li>
+                <li class="tab-header-item" data-tab="metric4"><b> Metric 4</b></li>
+            </ul>
+        </div>
+
+        <div class="inner-container">
+            <!-- Content for XAI Metrics -->
+            <div class="tab-content" id="xaiMetrics">
+
+
+
+                <div class="container inner-container">
+                    <!-- First Row -->
+                    <div class="row justify-content-center">
+                        <div class="col-sm text-center">
+                            {% if results and results['pred'] %}
+                            <b>
+                                <p>Prediction: </p>
+
+                            </b> {{ results['pred'] }} <br />
+                            <h5  style="color: white;">The model predicts that the image is a photo of a <b>{{results['pred'][0]}}
+                                </b> and
+                                the Probability is <b>{{results['pred'][1]}}</b></h5>
+
+                            {% else %}
+                            <p>No prediction results available.</p>
+                            {% endif %}
+                        </div>
+
+
+
+                        <div class="col-sm text-center">
+                            <b>
+                                <p>Top Predicted Lables: </p>
+                            </b> {{ results['top_T']}} <br />
+                            <h5  style="color: white;">It indicates a decreasing similarity to <b>{{results['top_T'][0]}}
+                                </b> and an increasing similarity to  <b>{{results['top_T'][5]}}</b></h5>  
+                        </div>
+                        <div class="col-sm text-center ">
+                            <b>
+                                <p>Top Predicted Lables Plot: </p>
+                            </b>
+                            <div id="top_T_plot_base64" class="image-container image-item"></div>
+                        </div>
+                    </div>
+                    {% if user_role == 'User' or user_role == 'Auditor' or user_role == 'Developer' %}
+                    <!-- Second Row -->
+                    <div class="row justify-content-center">
+
+                        <div class="col-sm text-center ">
+                            <b>
+                                <p>Lime Explanation: </p>
+                            </b>
+                            <div id="limeImageResult" class="image-container image-item"></div>
+                        </div>
+                        {% if user_role == 'Auditor' or user_role == 'Developer' %}
+                        <div class="col-sm text-center ">
+                            <b>
+                                <p>Segment Importance: </p>
+                            </b>
+                            <div id="bar_plot_base64" class="image-container image-item"></div>
+                        </div>
+
+                        <div class="col-sm text-center ">
+                            <b>
+                                <p>Segment Importance Plot: </p>
+                            </b>
+                            <div id="segment_overlay_base64" class="image-container image-item"></div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if user_role == 'Auditor' or user_role == 'Developer' %}
+                    <!-- Third Row -->
+                    <div class="row justify-content-center ">
+                        <div class="col-sm text-center ">
+                            <b>
+                                <p>Occlusion Explanation: </p>
+                            </b>
+                            <div id="Occ_image_base64" class="image-container image-item"></div>
+                        </div>
+                        <div class="col-sm text-center">
+                            <b>
+                                <p>Shap Explanation: </p>
+                            </b>
+                            <div id="shap_V_plot_base64" class="image-container image-item"></div>
+                        </div>
+
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+            </div>
+            <!-- Content for Metric 2 -->
+            <div class="tab-content" id="metric2">
+                <!-- Content for Metric 2 -->
+            </div>
+            <!-- Content for Metric 3 -->
+            <div class="tab-content" id="metric3">
+                <!-- Content for Metric 3 -->
+            </div>
+            <!-- Content for Metric 4 -->
+            <div class="tab-content" id="metric4">
+                <!-- Content for Metric 4 -->
+            </div>
+        </div>
+
+    </div>
+
+</body>
+<script>
+
+    // Get all tab headers and content containers
+    const tabHeaders = document.querySelectorAll('.tab-header-item');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Add a click event listener to each tab header
+    tabHeaders.forEach((tabHeader) => {
+        tabHeader.addEventListener('click', () => {
+            // Hide all tab contents
+            tabContents.forEach((tabContent) => {
+                tabContent.style.display = 'none';
+            });
+
+            // Show the selected tab content
+            const tabId = tabHeader.getAttribute('data-tab');
+            const tabContent = document.getElementById(tabId);
+            if (tabContent) {
+                tabContent.style.display = 'block';
+            }
+
+            // Update the active tab header
+            tabHeaders.forEach((header) => {
+                header.classList.remove('active');
+            });
+            tabHeader.classList.add('active');
+        });
+    });
+
+    // Show the initial tab content
+    tabHeaders[0].click();
+
+
+    /////////////////////////////////////////////////////
+    // Get all elements with the common class 'image-item'
+    const imageItems = document.querySelectorAll('.image-item');
+
+    // Add a click event listener to each image item
+    imageItems.forEach((imageItem) => {
+        imageItem.addEventListener('click', () => {
+            const image = imageItem.querySelector('img');
+            const src = image.src;
+            openImagePopup(src);
+        });
+    });
+
+    // Function to open the image in a popup
+    function openImagePopup(src) {
+        const popup = document.createElement('div');
+        popup.classList.add('image-popup');
+
+        const image = document.createElement('img');
+        image.src = src;
+
+        const closeBtn = document.createElement('span');
+        closeBtn.textContent = 'X';
+        closeBtn.classList.add('close-btn');
+        closeBtn.addEventListener('click', () => {
+            document.body.removeChild(popup);
+        });
+
+        // Close the popup when clicking on the overlay (background)
+        popup.addEventListener('click', (event) => {
+            if (event.target === popup) {
+                document.body.removeChild(popup);
+            }
+        });
+
+        popup.appendChild(image);
+        popup.appendChild(closeBtn);
+        document.body.appendChild(popup);
+    }
+    ////////////////////////////////////////////////////
+
+    //top_T_plot_base64
+    const top_T_plot_base64 = document.getElementById('top_T_plot_base64');
+    const top_T_plot = '{{ results["top_T_plot_base64"] }}';
+
+    const image2 = document.createElement('img');
+    image2.src = `data:image/png;base64,${top_T_plot}`;
+    top_T_plot_base64.innerHTML = '';
+    top_T_plot_base64.appendChild(image2);
+
+    // limeImageResult
+    const limeImageResult = document.getElementById('limeImageResult');
+    const Lime_dataURL = '{{ results["image_base64"] }}';
+
+    const image = document.createElement('img');
+    image.src = `data:image/jpeg;base64,${Lime_dataURL}`;
+
+    if ('{{ user_role }}' === 'User' || '{{ user_role }}' === 'Developer' || '{{ user_role }}' === 'Auditor') {
+
+        limeImageResult.innerHTML = '';
+        limeImageResult.appendChild(image);
+    } else {
+        limeImageResult.style.display = 'none';
+    }
+
+
+    //bar_plot_base64
+    const bar_plot_base64 = document.getElementById('bar_plot_base64');
+    const bar_plot = '{{ results["bar_plot_base64"] }}';
+
+    const image3 = document.createElement('img');
+    image3.src = `data:image/jpeg;base64,${bar_plot}`;
+
+    if ('{{ user_role }}' === 'Developer' || '{{ user_role }}' === 'Auditor') {
+
+        bar_plot_base64.innerHTML = '';
+        bar_plot_base64.appendChild(image3);
+    } else {
+        bar_plot_base64.style.display = 'none';
+    }
+
+    //segment_overlay_base64
+    const segment_overlay_base64 = document.getElementById('segment_overlay_base64');
+    const segment_overlay = '{{ results["segment_overlay_base64"] }}';
+
+    const image4 = document.createElement('img');
+    image4.src = `data:image/png;base64,${segment_overlay}`;
+
+    if ('{{ user_role }}' === 'Developer' || '{{ user_role }}' === 'Auditor') {
+
+        segment_overlay_base64.innerHTML = ''; // You might want to clear the previous content
+        segment_overlay_base64.appendChild(image4);
+    } else {
+        segment_overlay_base64.style.display = 'none';
+    }
+
+
+    //Occ_image_base64
+    const Occ_image_base64 = document.getElementById('Occ_image_base64');
+    const Occ_image = ' {{ results["Occ_image_base64"] }}';
+
+    const image5 = document.createElement('img');
+    image5.src = `data:image/png;base64,${Occ_image}`;
+
+    if ('{{ user_role }}' === 'Developer' || '{{ user_role }}' === 'Auditor') {
+
+        Occ_image_base64.innerHTML = ''; // You might want to clear the previous content
+        Occ_image_base64.appendChild(image5);
+    } else {
+        Occ_image_base64.style.display = 'none';
+    }
+
+    //shap_V_plot_base64
+
+    const shap_V_plot_base64 = document.getElementById('shap_V_plot_base64');
+    const Shap_image = ' {{ results["shap_V_plot_base64"] }}';
+
+    const image6 = document.createElement('img');
+    image6.src = `data:image/png;base64,${Shap_image}`;
+
+    if ('{{ user_role }}' === 'Developer' || '{{ user_role }}' === 'Auditor') {
+
+        shap_V_plot_base64.innerHTML = ''; // You might want to clear the previous content
+        shap_V_plot_base64.appendChild(image6);
+    } else {
+        shap_V_plot_base64.style.display = 'none';
+    }
+
+
+
+</script>
+{% endblock %}
