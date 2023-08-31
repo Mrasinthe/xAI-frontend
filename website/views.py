@@ -37,12 +37,17 @@ def mainPage():
     return render_template("mainPage.html",user=current_user,user_role=user_role)
 
 
-# Simulated data for the APIs based on user roles  , 'http://172.17.88.154:8080/explain_occlusion/image'
+# Simulated data for the APIs based on user roles 
+
+# 193.40.154.160:8090 - LIME
+# 193.40.154.87:8090 - SHAP
+# 193.40.155.96:8090 - Occlusion
+
 API_URLS = {
-    'User': ['http://172.17.91.246:8050/explain_lime/image'],
-    'Developer':  ['http://172.17.91.246:8050/explain_lime/image','http://172.17.91.246:8050/explain_occlusion/image','http://172.17.91.246:8050/explain_shap/image'],
-    'Auditor': ['http://172.17.88.154:8080/explain_lime/image', 'http://172.17.88.154:8080/explain_shap/image', 'http://172.17.88.154:8080/explain_occlusion/image'],
-    'Business': ['http://172.17.88.154:8080/explain_lime/image']
+    'User': ['http://193.40.154.143:8000/explain_lime/image'],
+    'Developer':  ['http://193.40.154.143:8000/explain_lime/image','http://193.40.154.143:8000/explain_shap/image','http://193.40.154.143:8000/explain_occlusion/image'],
+    'Auditor': ['http://193.40.154.143:8000/explain_lime/image', 'http://193.40.154.143:8000/explain_shap/image','http://193.40.154.143:8000/explain_occlusion/image'],
+    'Business': ['http://193.40.154.143:8000/explain_lime/image']
 }
 
 
@@ -105,6 +110,7 @@ async def explain():
 # Convert the merged dictionary back to JSON format
     merged_json = json.dumps(merged_dict, indent=4)
     data_dict = json.loads(merged_json)
+    # print("data_dict",data_dict)
 
     # Redirect to the results page
     return render_template('results.html', results=data_dict, user=current_user, user_role=user_role)

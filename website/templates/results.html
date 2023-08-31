@@ -1,12 +1,13 @@
 {% extends "base.html" %} {% block title %}Explanations{% endblock %} {% block content
 %}
 <div class="container3" style="font-family: 'Bahnschrift Light Condensed', sans-serif ;text-transform: uppercase;">
-    <a href="/XAI" style="color: white;" >Back</a>
-  </div><br />
+    <a href="/userRole" style="color: white;">Back</a>
+</div><br />
 
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <title>Results for Role: {{ user_role }}</title>
     <style>
         /* Reset some default styles for better consistency */
@@ -51,11 +52,9 @@
 
 
         /* .inner-container {
-            /* background-color: #00134d;
-            padding: 20px;
-            margin: 10px;
+           
             border-radius: 5px; 
-        } */
+        }  */
 
         /* Customize the column style */
         .col-sm {
@@ -66,7 +65,7 @@
         }
 
         /* Add styles for the image container */
-        .image-container {
+        /* .image-container {
             height: 200px;
             display: flex;
             justify-content: center;
@@ -80,9 +79,48 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
+        } */
+        .image-container {
+            height: 400px;
+            /* Increase the height to your desired value */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            max-width: 100%;
+            border-radius: 5px;
         }
 
-        /* Add styles for the metrics titles */
+        .image-container img {
+            max-width: 100%;
+            /* Remove the max-width restriction */
+            max-height: 100%;
+            /* Remove the max-height restriction */
+            /* width: 80%; */
+            /* Make sure the image covers the container width */
+            /* height: 95%; */
+            /* Make sure the image covers the container height */
+            object-fit: cover;
+            /* Maintain aspect ratio and cover the container */
+        }
+
+        .image-item {
+            display: block;
+            margin: auto;
+        }
+
+        .top-plot {
+            height: 230px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            max-width: 100%;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+
+        /* Add styles for the metrics titles  ,.seg-plot*/
         h2 {
             color: #333;
             font-size: 24px;
@@ -98,7 +136,7 @@
 
         /* Add styles for the additional columns in the third row */
         .col-sm.text-center {
-            background-color: #787A91;
+            background-color: white;
             padding: 20px;
             border-radius: 5px;
             margin-top: 10px;
@@ -121,7 +159,7 @@
         }
 
         .image-popup {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
@@ -166,7 +204,7 @@
         }
 
         .tab-header-item.active {
-            background-color:  #EEEEEE;
+            background-color: #EEEEEE;
             color: black;
 
         }
@@ -175,13 +213,59 @@
             background-color: #007399;
         }
 
-        /* .tab-content {
-            /* display: none;
+        .tab-content {
+            display: none;
             padding: 20px;
-            background-color: #fff;
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+            background-color: #787A91;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content2 {
+            /* position: relative; */
+            height: 200px;
+        }
+
+
+
+        /* .tab-pane {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            margin-top: 10px;
         } */
+        [data-tab-info] {
+            display: none;
+        }
+
+        .active[data-tab-info] {
+            display: block;
+        }
+
+        /* .tabs {
+            border-bottom: 1px solid grey;
+            background-color: rgb(16, 153, 9);
+            font-size: 25px;
+            color: rgb(0, 0, 0);
+            display: flex;
+            margin: 0;
+        } */
+
+        .tab-content3 {
+            margin-top: 1rem;
+            padding-left: 1rem;
+            font-family: "Bahnschrift Light Condensed", sans-serif;
+            text-transform: uppercase;
+            color: rgb(0, 0, 0);
+        }
+
+        .nav-link.active {
+            background-color: #787A91;
+            color: black;
+
+        }
     </style>
 </head>
 
@@ -209,56 +293,124 @@
 
 
 
-                <div class="container inner-container">
+                <div class=" inner-container">
                     <!-- First Row -->
                     <div class="row justify-content-center">
                         <div class="col-sm text-center">
+
                             {% if results and results['pred'] %}
                             <b>
                                 <p>Prediction: </p>
 
                             </b> {{ results['pred'] }} <br />
-                            <h5  style="color: white;">The model predicts that the image is a photo of a <b>{{results['pred'][0]}}
+                            <h5 style="color: black;">The model predicts that the image is a photo of a
+                                <b>{{results['pred'][0]}}
                                 </b> and
-                                the Probability is <b>{{results['pred'][1]}}</b></h5>
+                                the Probability is <b>{{results['pred'][1]}}</b>
+                            </h5>
+
+                            <b>
+                                <p>Top Predicted Lables: </p>
+                            </b> {{ results['top_T']}} <br />
+                            <h5 style="color: black;">It indicates a decreasing similarity to
+                                <b>{{results['top_T'][0]}}
+                                </b> and an increasing similarity to <b>{{results['top_T'][5]}}</b>
+                            </h5>
 
                             {% else %}
                             <p>No prediction results available.</p>
                             {% endif %}
                         </div>
+                        <!-- </div> -->
 
 
 
                         <div class="col-sm text-center">
                             <b>
-                                <p>Top Predicted Lables: </p>
-                            </b> {{ results['top_T']}} <br />
-                            <h5  style="color: white;">It indicates a decreasing similarity to <b>{{results['top_T'][0]}}
-                                </b> and an increasing similarity to  <b>{{results['top_T'][5]}}</b></h5>  
-                        </div>
-                        <div class="col-sm text-center ">
-                            <b>
                                 <p>Top Predicted Lables Plot: </p>
                             </b>
-                            <div id="top_T_plot_base64" class="image-container image-item"></div>
+                            <div id="top-plot" class="top-plot"></div>
+                            <!-- <div id="top_T_plot_base64" class="image-container image-item"></div> -->
                         </div>
+
                     </div>
+
+
                     {% if user_role == 'User' or user_role == 'Auditor' or user_role == 'Developer' %}
                     <!-- Second Row -->
                     <div class="row justify-content-center">
 
-                        <div class="col-sm text-center ">
-                            <b>
-                                <p>Lime Explanation: </p>
-                            </b>
-                            <div id="limeImageResult" class="image-container image-item"></div>
+                        <div class="col-sm text-center">
+                            <div class="col-md-12">
+                                <ul class="nav nav-tabs" id="tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="dataset-tab" data-toggle="tab" href="#tab_1"
+                                            role="tab" aria-controls="#tab_1" aria-selected="true" style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                            text-transform: uppercase;"><b>LIME</b></a>
+                                    </li>
+                                    {% if user_role == 'Auditor' or user_role == 'Developer' %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="dataset-filters-tab" data-toggle="tab" href="#tab_2"
+                                            role="tab" aria-controls="#tab_2" aria-selected="false" style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                            text-transform: uppercase;"><b>SHAP</b></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="dataset-filters-tab2" data-toggle="tab" href="#tab_3"
+                                            role="tab" aria-controls="#tab_3" aria-selected="false" style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                            text-transform: uppercase;"><b>Occlusion </b></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="dataset-filters-tab2" data-toggle="tab" href="#tab_4"
+                                            role="tab" aria-controls="#tab_4" aria-selected="false" style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                            text-transform: uppercase;"><b>Heat Map </b></a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+
+
+                                <!-- Tab content -->
+                                <div class="tab-content3">
+                                    <div class="tabs__tab active" id="tab_1" data-tab-info>
+                                        <b>
+                                            <p>Lime Explanation: </p>
+                                        </b>
+                                        <div id="limeImageResult" class="image-container image-item"></div>
+
+                                    </div>
+                                    {% if user_role == 'Auditor' or user_role == 'Developer' %}
+                                    <div class="tabs__tab" id="tab_2" data-tab-info>
+                                        <b>
+                                            <p>Shap Explanation: </p>
+                                        </b>
+                                        <div id="shap_V_plot_base64" class="image-container image-item"></div>
+
+                                    </div>
+                                    <div class="tabs__tab" id="tab_3" data-tab-info>
+                                        <b>
+                                            <p>Occlusion Explanation: </p>
+                                        </b>
+                                        <div id="Occ_image_base64" class="image-container image-item"></div>
+                                    </div>
+                                    
+                                    <div class="tabs__tab" id="tab_4" data-tab-info>
+                                        <b>
+                                            <p>Grad Cam Heat Map: </p>
+                                        </b>
+                                        <div id="Occ_GradCam_base64" class="image-container image-item"></div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
+
                         {% if user_role == 'Auditor' or user_role == 'Developer' %}
                         <div class="col-sm text-center ">
                             <b>
                                 <p>Segment Importance: </p>
                             </b>
                             <div id="bar_plot_base64" class="image-container image-item"></div>
+
+                            <!-- <div id="seg-plot" class="seg-plot"></div> -->
                         </div>
 
                         <div class="col-sm text-center ">
@@ -269,28 +421,13 @@
                         </div>
                         {% endif %}
                     </div>
-                    {% if user_role == 'Auditor' or user_role == 'Developer' %}
-                    <!-- Third Row -->
-                    <div class="row justify-content-center ">
-                        <div class="col-sm text-center ">
-                            <b>
-                                <p>Occlusion Explanation: </p>
-                            </b>
-                            <div id="Occ_image_base64" class="image-container image-item"></div>
-                        </div>
-                        <div class="col-sm text-center">
-                            <b>
-                                <p>Shap Explanation: </p>
-                            </b>
-                            <div id="shap_V_plot_base64" class="image-container image-item"></div>
-                        </div>
+                    {% endif %}
 
-                    </div>
-                    {% endif %}
-                    {% endif %}
                 </div>
-
             </div>
+
+
+
             <!-- Content for Metric 2 -->
             <div class="tab-content" id="metric2">
                 <!-- Content for Metric 2 -->
@@ -308,7 +445,21 @@
     </div>
 
 </body>
-<script>
+<script type="text/javascript">
+
+    const tabs = document.querySelectorAll('[data-tab-value]')
+    const tabInfos = document.querySelectorAll('[data-tab-info]')
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = document
+                .querySelector(tab.dataset.tabValue);
+            tabInfos.forEach(tabInfo => {
+                tabInfo.classList.remove('active')
+            })
+            target.classList.add('active');
+        })
+    });
 
     // Get all tab headers and content containers
     const tabHeaders = document.querySelectorAll('.tab-header-item');
@@ -380,16 +531,83 @@
         popup.appendChild(closeBtn);
         document.body.appendChild(popup);
     }
+
     ////////////////////////////////////////////////////
 
     //top_T_plot_base64
-    const top_T_plot_base64 = document.getElementById('top_T_plot_base64');
-    const top_T_plot = '{{ results["top_T_plot_base64"] }}';
+    // const top_T_plot_base64 = document.getElementById('top_T_plot_base64');
+    // const top_T_plot = '{ results["top_T_plot_base64"] }}';
 
-    const image2 = document.createElement('img');
-    image2.src = `data:image/png;base64,${top_T_plot}`;
-    top_T_plot_base64.innerHTML = '';
-    top_T_plot_base64.appendChild(image2);
+    // const image2 = document.createElement('img');
+    // image2.src = `data:image/png;base64,${top_T_plot}`;
+    // top_T_plot_base64.innerHTML = '';
+    // top_T_plot_base64.appendChild(image2);
+
+
+    //top_plot
+    var top_labels_namesJSON = ' {{ results["top_labels_names"] | tojson | safe }}';
+    var top_labels_names = JSON.parse(top_labels_namesJSON);
+    // results.top_labels_names; 
+    var scoresJSON = '{{ results["scores"] | tojson | safe }}';
+    var scores = JSON.parse(scoresJSON);
+    // results.scores;
+    console.log('Scores:', scores);
+    console.log('Scores:', top_labels_names);
+
+
+    // Create a trace for the bar plot
+    var trace = {
+        x: top_labels_names,
+        y: scores,
+        type: 'bar',
+        marker: {
+            color: 'rgb(139, 0, 0)'  // Specify the color for the bars
+        }
+    };
+
+    // Create layout options
+    var layout = {
+        title: 'Top Label Scores',
+        xaxis: { title: 'Labels' },
+        yaxis: { title: 'Scores' },
+        autosize: true,  // Make the plot responsive
+        margin: { l: 50, r: 50, b: 50, t: 50 }
+    };
+
+    // Combine trace and layout to create the plot
+    var plotData = [trace];
+    Plotly.newPlot('top-plot', plotData, layout);
+
+    //_segments_Importance
+    // var bar_plot_segmentsJSON = ' { results["bar_plot_segments"] | tojson | safe }}';
+    // var bar_plot_segments = JSON.parse(bar_plot_segmentsJSON);
+    // // results.top_labels_names; 
+    // var bar_plot_importanceJSON = '{ results["bar_plot_importance"] | tojson | safe }}';
+    // var bar_plot_importance = JSON.parse(bar_plot_importanceJSON);
+    // // results.scores;
+    // console.log('bar_plot_segments:', bar_plot_segments);
+    // console.log('bar_plot_importance:', bar_plot_importance);
+
+
+    // // Create a trace for the bar plot
+    // var trace2 = {
+    //     x: bar_plot_segments,
+    //     y: bar_plot_importance,
+    //     type: 'bar'
+    // };
+
+    // // Create layout options
+    // var layout2 = {
+    //     title: 'Top Label Scores',
+    //     xaxis: { title: 'Segment' },
+    //     yaxis: { title: 'Importance' },
+    //     autosize: true,  // Make the plot responsive
+    //     margin: { l: 50, r: 50, b: 50, t: 50 }
+    // };
+
+    // // Combine trace and layout to create the plot
+    // var plotData2 = [trace];
+    // Plotly.newPlot('seg-plot', plotData2, layout2);
 
     // limeImageResult
     const limeImageResult = document.getElementById('limeImageResult');
@@ -422,6 +640,7 @@
         bar_plot_base64.style.display = 'none';
     }
 
+
     //segment_overlay_base64
     const segment_overlay_base64 = document.getElementById('segment_overlay_base64');
     const segment_overlay = '{{ results["segment_overlay_base64"] }}';
@@ -453,6 +672,21 @@
         Occ_image_base64.style.display = 'none';
     }
 
+    //Occ_GradCam_base64
+    const Occ_GradCam_base64 = document.getElementById('Occ_GradCam_base64');
+    const Occ_GradCam_image = ' {{ results["Occ_GradCam_base64"] }}';
+
+    const image7 = document.createElement('img');
+    image7.src = `data:image/png;base64,${Occ_GradCam_image}`;
+
+    if ('{{ user_role }}' === 'Developer' || '{{ user_role }}' === 'Auditor') {
+
+        Occ_GradCam_base64.innerHTML = ''; // You might want to clear the previous content
+        Occ_GradCam_base64.appendChild(image7);
+    } else {
+        Occ_GradCam_base64.style.display = 'none';
+    }
+
     //shap_V_plot_base64
 
     const shap_V_plot_base64 = document.getElementById('shap_V_plot_base64');
@@ -468,7 +702,6 @@
     } else {
         shap_V_plot_base64.style.display = 'none';
     }
-
 
 
 </script>
