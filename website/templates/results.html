@@ -308,13 +308,13 @@
                                 </b> and
                                 the Probability is <b>{{results['pred'][1]}}</b>
                             </h5>
-
+                            <br />
                             <b>
                                 <p>Top Predicted Lables: </p>
                             </b> {{ results['top_T']}} <br />
-                            <h5 style="color: black;">It indicates a decreasing similarity to
-                                <b>{{results['top_T'][0]}}
-                                </b> and an increasing similarity to <b>{{results['top_T'][5]}}</b>
+                            <h5 style="color: black;"> It indicates a higher probability of similarity to  <b>{{results['top_T'][0]}}</b> and a lower probability of similarity to   <b>{{results['top_T'][5]}}
+                            </b>.
+                          
                             </h5>
 
                             {% else %}
@@ -567,9 +567,9 @@
 
     // Create layout options
     var layout = {
-        title: 'Top Label Scores',
+        title: 'Top Predicted Labels Plot',
         xaxis: { title: 'Labels' },
-        yaxis: { title: 'Scores' },
+        yaxis: { title: 'Probability' },
         autosize: true,  // Make the plot responsive
         margin: { l: 50, r: 50, b: 50, t: 50 }
     };
