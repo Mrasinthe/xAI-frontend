@@ -67,12 +67,12 @@ def mainPage():
 
 # 193.40.154.160:8090 - LIME
 # 193.40.154.87:8090 - SHAP
-# 193.40.155.96:8090 - Occlusion ,'http://193.40.155.96:8090/explain_occlusion/image','http://193.40.154.87:8090/explain_shap/image', 
+# 193.40.155.96:8090 - Occlusion ['http://193.40.154.160:8090/explain_lime/image','http://193.40.154.87:8090/explain_shap/image','http://193.40.155.96:8090/explain_occlusion/image'],   
 
 
 API_URLS = {
     'User': ['http://193.40.154.143:8000/explain_lime/image'],
-    'Developer': ['http://193.40.154.160:8090/explain_lime/image'],
+    'Developer': ['http://193.40.154.143:8000/explain_lime/image', 'http://193.40.154.143:8000/explain_shap/image','http://193.40.154.143:8000/explain_occlusion/image'],
     'Auditor': ['http://193.40.154.143:8000/explain_lime/image', 'http://193.40.154.143:8000/explain_shap/image', 'http://193.40.154.143:8000/explain_occlusion/image'],
     'Business': ['http://193.40.154.143:8000/explain_lime/image']
 }
