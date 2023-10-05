@@ -1,182 +1,85 @@
+<!--
+=========================================================
+* Argon Dashboard - v1.2.0
+=========================================================
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+
+
+* Copyright  Creative Tim (http://www.creative-tim.com)
+* Coded by www.creative-tim.com
+
+
+
+=========================================================
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    crossorigin="anonymous" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="canonical" href="https://appseed.us/admin-dashboards/flask-boilerplate-dashboard-argon">
 
-  <title>{% block title %} Home {% endblock %}</title>
+  <title>
+    Spatial - {% block title %} {% endblock %}
+  </title>
   <style>
-    body {
-      background-color: #00134d;
-      background-repeat: no-repeat;
-      background-size: cover;
-      font-family: Arial, sans-serif;
-    }
-
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 900;
-      /* Use a higher z-index to ensure the navbar stays on top */
-      background-color: #303841;
-      /* Set the background color of the navbar */
-      box-shadow: white;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .jumbotron-text {
-      color: white;
-      margin-bottom: 0;
-    }
-
-    #signup-button,
-    #login-button,
-    #logout-button {
-      background-color: #ffffff;
-      /* Replace with your desired background color */
-      color: white;
-      /* Replace with your desired text color */
-      padding: 1px 1px;
-      /* Replace with your desired padding */
-      border-radius:70px;
-      /* Add border-radius property for rounded corners */
-    }
-
-    #signup-button:hover,
-    #login-button:hover,
-    #logout-button:hover {
-      background-color: #007399;
-      /* Replace with your desired hover background color */
-      color: #ffffff;
-      /* Replace with your desired hover text color */
-    }
-
-    #nav-item:hover {
-      background-color: #007399;
-      /* Replace with your desired hover background color */
-      color: #ffffff;
-    }
-
-    /* mainPage CSS */
-    .arrow {
-      cursor: pointer;
-    }
-
-    .loader {
-      border: 16px solid #f3f3f3;
-      border-top: 16px solid #3498db;
-      border-radius: 50%;
-      width: 120px;
-      height: 120px;
-      animation: spin 2s linear infinite;
-      margin: 20px auto;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-
-      /* mainPage CSS */
-    }
-
-    .container {
-      /* Add some top padding to push the content below the fixed navbar */
-      padding-top: 70px;
-      /* Change the value as per your navbar's height /*:' '; */
-      max-width: 100%;
-    }
   </style>
+
+  <!-- Favicon - loaded as static -->
+  <link rel="icon" href="/static/assets/LogReg.png" type="image/png">
+  <!-- Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+  <!-- Icons -->
+  <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
+  <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
+  <!-- Page plugins -->
+  <!-- Argon CSS -->
+  <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+
+  <!-- Specific CSS goes HERE -->
+  {% block stylesheets %}{% endblock stylesheets %}
+
 </head>
 
-<body>
-  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-    <a class="navbar-brand" href="/"
-      style="color: white; font-family: 'Bahnschrift Light Condensed', sans-serif ;text-transform: uppercase;">Spatial</a>
+<body class="">
 
+  {% include "sidenav.html" %}
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <div class="main-content" id="panel">
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-item nav-link" id="about" href="/about"
-            style="color: white;  font-family: 'Bahnschrift Light Condensed', sans-serif ;text-transform: uppercase;">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-item nav-link" id="contact" href="/contact"
-            style="color: white; font-family: 'Bahnschrift Light Condensed', sans-serif ;text-transform: uppercase;">Contact</a>
-        </li>
-      </ul>
+    {% include "navigation.html" %}
+
+    <div class="container1"> {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %} {% if category ==
+      'error' %}
+      <div class="alert alert-danger alter-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% else %}
+      <div class="alert alert-success alter-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      {% endif %} {% endfor %} {% endif %} {% endwith %}{% block content %}{% endblock content %}
     </div>
-
-    <div class="ml-auto d-flex">
-      {% if user.is_authenticated %}
-      <a class="navbar-brand" href="/user" style="color: white">
-        {{user.first_name }}</a>
-
-      <li class="nav-item btn" id="logout-button">
-        <a class="nav-item nav-link" id="logout" href="/logout" style="font-family: 'Bahnschrift Light Condensed', sans-serif ;text-transform: uppercase;">Log Out</a>
-      </li>
-      &nbsp; {% else %}
-      <li class="nav-item btn" id="signup-button">
-        <a class="nav-item nav-link" id="signUp" href="/sign-up" style="font-family: 'Bahnschrift Light Condensed', sans-serif ;text-transform: uppercase;">Sign Up</a>
-      </li>
-      &nbsp;
-      <li class="nav-item btn" id="login-button">
-        <a class="nav-item nav-link" id="login" href="/login" style="font-family: 'Bahnschrift Light Condensed', sans-serif ;text-transform: uppercase;">Log In</a>
-      </li>
-      {% endif %}
-    </div>
-  </nav>
-
-  <div class="container1" style="margin-top: 62px">
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %} {% for category, message in messages %} {% if category ==
-    'error' %}
-    <div class="alert alert-danger alter-dismissable fade show" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% else %}
-    <div class="alert alert-success alter-dismissable fade show" role="alert">
-      {{ message }}
-      <button type="button" class="close" data-dismiss="alert">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    {% endif %} {% endfor %} {% endif %} {% endwith %}
+    {% include "footer-fullscreen.html" %}
   </div>
-  <div class="container">{% block content %} {% endblock %}</div>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+  {% include "scripts.html" %}
+
+  <!-- Specific JS goes HERE -->
+  {% block javascripts %}{% endblock javascripts %}
+
+  <script src="/static/assets/js/argon.js?v=1.2.0"></script>
+
 </body>
 
 </html>

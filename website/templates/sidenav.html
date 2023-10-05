@@ -1,0 +1,111 @@
+<body class="nav-open g-sidenav-show g-sidenav-pinned" style="min-height: 100vh;">
+  <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+    <div class="scrollbar-inner">
+      <!-- Brand  sD_logo-->
+      <div class="sidenav-header  align-items-center">
+        <a class="navbar-brand" href="/">
+          <img src="/static/assets/sD_logo.png" class="navbar-brand-img" alt="Spatial">
+        </a>
+      </div>
+      <div class="navbar-inner">
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+          <!-- Nav items -->
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link {% if 'index' in segment %} active {% endif %}" href="/">
+                <!-- <i class="ni ni-tv-2 text-primary"></i> -->
+                <i class="ni ni-single-02 text-yellow"></i>
+                <span class="nav-link-text">User Role</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if 'icons' in segment %} active {% endif %}"
+                href="/dashboard?user_role={{ user_role }}">
+                <i class="ni ni-tv-2 text-orange"></i>
+                <span class="nav-link-text">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if 'map' in segment %} active {% endif %}"
+                href="/XAI?user_role={{ user_role }}&MS=XAI">
+                <i class="ni ni-atom text-primary"></i>
+                <span class="nav-link-text">xAI</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if 'profile' in segment %} active {% endif %}"
+                href="/fairness?user_role={{ user_role }}&MS=Fairness">
+                <i class="ni ni-diamond text-orange"></i>
+                <span class="nav-link-text">Fairness</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                <i class="ni ni-button-power text-red"></i>
+                <span class="nav-link-text">Logout</span>
+              </a>
+            </li> {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('auth.login') }}">
+                <i class="ni ni-key-25 text-info"></i>
+                <span class="nav-link-text">Login</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('auth.sign_up') }}">
+                <i class="ni ni-circle-08 text-pink"></i>
+                <span class="nav-link-text">Sign Up</span>
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+              <a class="nav-link" href="/about?user_role={{ user_role }}">
+                <i class=" ni ni-app text-green"></i>
+                <span class="nav-link-text">About</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact?user_role={{ user_role }}">
+                <i class="ni ni-badge text-pink"></i>
+                <span class="nav-link-text">Contact</span>
+              </a>
+            </li>
+          </ul>
+          <!-- Divider -->
+          <hr class="my-3">
+          <!-- Heading -->
+          <h6 class="navbar-heading p-0 text-muted">
+            <span class="docs-normal">Resources</span>
+          </h6>
+          <!-- Navigation -->
+          <ul class="navbar-nav mb-md-3">
+
+            <li class="nav-item">
+              <a class="nav-link" target="_blank" href="https://github.com/Mrasinthe/xAI-frontend">
+                <!-- <i class="ni ni-archive-2 text-red"></i> -->
+                <img src="./static/assets/img/icons/common/github.svg" alt="GitHub Logo"> &nbsp; &nbsp;
+                <span class="nav-link-text text-red">Github</span>
+              </a>
+            </li>
+
+            <!-- <li class="nav-item">
+              <a class="nav-link" target="_blank" href="https://appseed.us/admin-dashboards/flask-dashboard-argon-pro">
+                <i class="ni ni-spaceship text-red"></i>
+                <span class="nav-link-text text-red">PRO Version</span>
+              </a>
+            </li> -->
+
+            <li class="nav-item">
+              <a class="nav-link active active-pro" target="_blank" href="https://dps.cs.ut.ee/index.html">
+                <i class="ni ni-send text-dark"></i>
+                <span class="nav-link-text">Support</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</body>

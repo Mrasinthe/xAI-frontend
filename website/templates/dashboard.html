@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}
+dashboard
+{% endblock %}
+
+{% block content %}
+<div class="container2" style="margin-top: 10px; ">
+    &nbsp;
+    <a href="/userRole?user_role={{ user_role }}" class="nav-link-text">Back</a>
+
+    {% if user_role %}
+    &nbsp;<h4 style="color: black;"> ROLE : {{user_role}}</h4>
+    {% else %}
+    &nbsp; <h4 class="nav-link-text text-red"> ROLE - Select a User Role</h4>
+    {% endif %}
+</div>
+
+<br />
+
+<!-- <!DOCTYPE html>
+<html lang="en"> -->
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .card-text {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-text p {
+            margin: 0;
+            color: black;
+        }
+
+        .container2 h4 {
+            margin-left: 8px;
+            margin-top: 8px;
+            /* Adjust the value as needed */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-12 col-xl-11">
+                <div class="row">
+                    <!-- Card for XAI #787A91; -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card"
+                            style="border: none; border-radius: 15px; box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);">
+                            <div class="card-body text-white">
+                                <h3 class="card-title" align="center">XAI</h3>
+                                <div class="card-text">
+                                    <p>XAI is a field of artificial intelligence (AI) that focuses on making AI systems
+                                        more transparent and understandable to humans. AI models, particularly deep
+                                        learning
+                                        models, can be highly complex and difficult to interpret.</p>
+                                    <p>This lack of transparency can lead to issues of trust, accountability, and
+                                        ethics.
+                                        XAI aims to address these concerns by providing insights into how AI models
+                                        make
+                                        decisions. It enables users to understand the underlying logic and factors that
+                                        contribute to AI predictions or recommendations.</p>
+                                </div> <br />
+                                <a href="/XAI?user_role={{ user_role }}&MS=XAI"
+                                    class="btn btn-sm navbar-dark bg-primary" style="color: white; ">Go to XAI</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card for Fairness -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card"
+                            style="border: none; border-radius: 15px; box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);">
+                            <div class="card-body text-white">
+                                <h3 class="card-title" align="center">Fairness</h3>
+                                <div class="card-text">
+                                    <p>Fairness in AI refers to the ethical principle that AI systems should
+                                        treat all individuals or groups fairly and without bias. AI systems can
+                                        inadvertently
+                                        perpetuate or even exacerbate existing biases and inequalities present in
+                                        society.
+                                    </p>
+                                    <p>Fairness is a desired quality of a system requiring it to avoid discrimination
+                                        by
+                                        ensuring that the system outcomes treat people in an equivalent manner.
+                                        In machine learning, fairness is evaluated by comparing the model performance
+                                        with
+                                        the protected and unprotected attributes.</p>
+                                </div><br />
+                                <a href="/fairness?user_role={{ user_role }}&MS=Fairness"
+                                    class="btn btn-sm navbar-dark bg-primary" style="color: white;  ">Go to
+                                    Fairness</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card for MS3 -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card"
+                            style="border: none; border-radius: 15px; box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);">
+                            <div class="card-body text-white">
+                                <h3 class="card-title" align="center">MS3</h3>
+                                <div class="card-text">
+                                    <p>Details about MS3
+                                    </p>
+                                </div><br />
+                                <a href="/fairness?user_role={{ user_role }}&MS=MS3"
+                                    class="btn btn-sm navbar-dark bg-primary" style="color: white;">Go to MS3</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card for MS4 -->
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card"
+                            style="border: none; border-radius: 15px; box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);">
+                            <div class="card-body text-white">
+                                <h3 class="card-title" align="center">MS4</h3>
+                                <div class="card-text">
+                                    <p>Details about MS4
+                                    </p>
+                                </div><br />
+                                <a href="/fairness?user_role={{ user_role }}&MS=MS4"
+                                    class="btn btn-sm navbar-dark bg-primary" style="color: white; ">Go to MS4</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<!-- </html> -->
+{% endblock %}

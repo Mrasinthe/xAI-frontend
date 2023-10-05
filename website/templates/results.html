@@ -1,7 +1,8 @@
-{% extends "base.html" %} {% block title %}Explanations{% endblock %} {% block content
+{% extends "base.html" %} {% block title %}XAI Results{% endblock %} {% block content
 %}
-<div class="container3" style="font-family: 'Bahnschrift Light Condensed', sans-serif ;text-transform: uppercase;">
-    <a href="/userRole" style="color: white;">Back</a>
+<div class="container3" style="margin-top: 10px">
+    &nbsp;
+    <span class="nav-link-text"><a href="/XAI?user_role={{ user_role }}"></span>Back</a>
 </div><br />
 
 
@@ -17,19 +18,12 @@
         }
 
         /* Add background color to the body */
-        body {
-            background-color: #00134d;
-        }
+
 
         /* Add styles for the header */
         header {
             color: white;
             text-align: left;
-            text-shadow:
-                /* Bottom-left */
-                1px 1px 0 black;
-            font-family: "Bahnschrift Light Condensed", sans-serif;
-            text-transform: uppercase;
         }
 
         header h1 {
@@ -42,10 +36,10 @@
         }
 
         /* Customize the container and inner-container styles */
-        .container {
-            background-color: #00134d;
+        .container4 {
+            /* background-color: #00134d; */
             padding: 20px;
-            margin: 10px auto;
+            /* margin: 10px auto; */
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             outline: white;
         }
@@ -127,11 +121,12 @@
             margin-top: 0;
         }
 
-        p {
+        .p1 {
             color: black;
             margin-top: 0;
-            font-family: "Bahnschrift Light Condensed", sans-serif;
+            font-family: 'Bahnschrift Light Condensed', sans-serif;
             text-transform: uppercase;
+            font-size: 24px;
         }
 
         /* Add styles for the additional columns in the third row */
@@ -272,9 +267,9 @@
 <body>
 
 
-    <div class="container">
+    <div class="container4">
         <header>
-            <h5> <b>Results for Role: {{ user_role }}</b></h5>
+            <h5> Results for Role: {{ user_role }}</h5>
         </header>
         <!-- Left Column -->
 
@@ -300,7 +295,8 @@
 
                             {% if results and results['pred'] %}
                             <b>
-                                <p>Prediction: </p>
+                                <p1 style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                text-transform: uppercase;">Prediction: </p1><br />
 
                             </b> {{ results['pred'] }} <br />
                             <h5 style="color: black;">The model predicts that the image is a photo of a
@@ -310,15 +306,18 @@
                             </h5>
                             <br />
                             <b>
-                                <p>Top Predicted Lables: </p>
+                                <p1 style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                text-transform: uppercase;">Top Predicted Lables: </p1><br />
                             </b> {{ results['top_T']}} <br />
-                            <h5 style="color: black;"> It indicates a higher probability of similarity to  <b>{{results['top_T'][0]}}</b> and a lower probability of similarity to   <b>{{results['top_T'][5]}}
-                            </b>.
-                          
+                            <h5 style="color: black;"> It indicates a higher probability of similarity to
+                                <b>{{results['top_T'][0]}}</b> and a lower probability of similarity to
+                                <b>{{results['top_T'][5]}}
+                                </b>.
+
                             </h5>
 
                             {% else %}
-                            <p>No prediction results available.</p>
+                            <p1>No prediction results available.</p1>
                             {% endif %}
                         </div>
                         <!-- </div> -->
@@ -327,7 +326,8 @@
 
                         <div class="col-sm text-center">
                             <b>
-                                <p>Top Predicted Lables Plot: </p>
+                                <p1 style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                text-transform: uppercase;"> Top Predicted Lables Plot: </p1><br>
                             </b>
                             <div id="top-plot" class="top-plot"></div>
                             <!-- <div id="top_T_plot_base64" class="image-container image-item"></div> -->
@@ -372,7 +372,8 @@
                                 <div class="tab-content3">
                                     <div class="tabs__tab active" id="tab_1" data-tab-info>
                                         <b>
-                                            <p>Lime Explanation: </p>
+                                            <p1 style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                            text-transform: uppercase;">Lime Explanation: </p1>
                                         </b>
                                         <div id="limeImageResult" class="image-container image-item"></div>
 
@@ -380,21 +381,23 @@
                                     {% if user_role == 'Auditor' or user_role == 'Developer' %}
                                     <div class="tabs__tab" id="tab_2" data-tab-info>
                                         <b>
-                                            <p>Shap Explanation: </p>
+                                            <p1 style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                            text-transform: uppercase;">Shap Explanation: </p1>
                                         </b>
                                         <div id="shap_V_plot_base64" class="image-container image-item"></div>
 
                                     </div>
                                     <div class="tabs__tab" id="tab_3" data-tab-info>
                                         <b>
-                                            <p>Occlusion Explanation: </p>
+                                            <p1 style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                            text-transform: uppercase;">Occlusion Explanation: </p1>
                                         </b>
                                         <div id="Occ_image_base64" class="image-container image-item"></div>
                                     </div>
-                                    
+
                                     <div class="tabs__tab" id="tab_4" data-tab-info>
                                         <b>
-                                            <p>Grad Cam Heat Map: </p>
+                                            <p1>Grad Cam Heat Map: </p1>
                                         </b>
                                         <div id="Occ_GradCam_base64" class="image-container image-item"></div>
                                     </div>
@@ -406,7 +409,8 @@
                         {% if user_role == 'Auditor' or user_role == 'Developer' %}
                         <div class="col-sm text-center ">
                             <b>
-                                <p>Segment Importance: </p>
+                                <p1 style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                text-transform: uppercase;">Segment Importance: </p1>
                             </b>
                             <div id="bar_plot_base64" class="image-container image-item"></div>
 
@@ -415,7 +419,8 @@
 
                         <div class="col-sm text-center ">
                             <b>
-                                <p>Segment Importance Plot: </p>
+                                <p1 style="color: black; font-family: 'Bahnschrift Light Condensed', sans-serif;
+                                text-transform: uppercase;">Segment Importance Plot: </p1>
                             </b>
                             <div id="segment_overlay_base64" class="image-container image-item"></div>
                         </div>
@@ -441,6 +446,9 @@
                 <!-- Content for Metric 4 -->
             </div>
         </div>
+
+    </div>
+    <div class="container-space">
 
     </div>
 
