@@ -1,16 +1,20 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
 from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db   ##means from __init__.py import db
+from . import db  # means from __init__.py import db
 from flask_login import login_user, login_required, logout_user, current_user
+from datetime import datetime
+
 
 auth = Blueprint('auth', __name__)
 
-@auth.route('/login', methods=['GET','POST'])
+
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         # If user is already logged in, redirect to a different page
-        return redirect(url_for('views.select_role'))  # Change 'dashboard' to your desired route
+        # Change 'dashboard' to your desired route
+        return redirect(url_for('views.select_role'))
 
     if request.method == 'POST':
         email = request.form.get('email')
@@ -23,15 +27,16 @@ def login():
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
-                return redirect(url_for('views.select_role'))
+                if user.user_role == 'user':
+                    return redirect(url_for('views.select_role'))
+                else:
+                    return redirect(url_for('views.admin_page'))
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
             flash('Email does not exist.', category='error')
 
-
     return render_template("login.html", user=current_user)
-
 
 
 @auth.route('/logout')
@@ -45,13 +50,15 @@ def logout():
 def sign_up():
     if current_user.is_authenticated:
         # If user is already logged in, redirect to a different page
-        return redirect(url_for('views.select_role')) 
-        
+        return redirect(url_for('views.select_role'))
+
     if request.method == 'POST':
         email = request.form.get('email')
         first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        user_role = 'user'
+        date = datetime.now()
 
         user = User.query.filter_by(first_name=first_name).first()
         if user:
@@ -66,7 +73,7 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         else:
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='sha256'))
+                password1, method='sha256'), user_role=user_role, date=date)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
@@ -74,4 +81,3 @@ def sign_up():
             return redirect(url_for('views.select_role'))
 
     return render_template("signup.html", user=current_user)
-

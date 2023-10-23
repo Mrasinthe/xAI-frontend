@@ -1,15 +1,44 @@
+from .models import User
+from . import db
 import aiohttp
 import asyncio
-from flask import Blueprint, render_template, request, session, redirect, url_for
+from flask import Blueprint, render_template, request, session, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 from aiohttp import FormData
 from aiohttp import ClientSession
+from flask_login import UserMixin
+from functools import wraps
 
 
 views = Blueprint('views', __name__)
+
+# To check the user role
+
+###################### START DEFUALT ############################
+
+
+def user_role_required(required_role):
+    def decorator(func):
+        @wraps(func)
+        def decorated_function(*args, **kwargs):
+            # Get the user's role from the session
+            user_role = session.get('user_role')
+            user = User.query.filter_by(
+                first_name=current_user.first_name).first()
+            user_role = user.user_role
+
+            if user_role == required_role:
+                return func(*args, **kwargs)
+            else:
+                # Redirect to an unauthorized page or take other action
+                return redirect(url_for('views.unauthorized'))
+
+        return decorated_function
+
+    return decorator
 
 
 @views.route('/')
@@ -21,8 +50,18 @@ def home():
     return render_template("home.html", user=current_user)
 
 
+@views.route('/unauthorized', methods=['GET'])
+def unauthorized():
+    user_role = request.args.get('user_role')
+    print("unauthorized",  user_role)
+    session['user_role'] = user_role
+
+    return render_template("unauthorized.html", user=current_user, user_role=user_role)
+
+
 @views.route('/userRole', methods=['GET', 'POST'])
 @login_required
+@user_role_required('user')
 def select_role():
     if request.method == 'POST':
         user_role = request.form.get('user_role')
@@ -35,8 +74,24 @@ def select_role():
     return render_template('userRole.html', user=current_user)
 
 
+@views.route('/admin', methods=['GET', 'POST'])
+@login_required
+@user_role_required('admin')
+def admin_page():
+    if request.method == 'POST':
+        user_role = request.form.get('user_role')
+        print("Selected role:", user_role)
+        # Store the selected role in a session variable
+        session['user_role'] = user_role
+        # Redirect to the main page with the selected role as a query parameter
+        return redirect(url_for('views.dashboard', user_role=user_role))
+
+    return render_template('admin_page.html', user=current_user)
+
+
 @views.route('/dashboard', methods=['GET', 'POST'])
 @login_required
+@user_role_required('user')
 def dashboard():
     user_role = request.args.get('user_role')
     print("Dashboard",  user_role)
@@ -45,17 +100,7 @@ def dashboard():
     return render_template("dashboard.html", user=current_user, user_role=user_role)
 
 
-@views.route('/fairness', methods=['GET', 'POST'])
-@login_required
-def fairness():
-    user_role = request.args.get('user_role')
-    print("fairness",  user_role)
-    session['user_role'] = user_role
-
-    return render_template("fairness.html", user=current_user, user_role=user_role)
-
-
-@views.route('/about', methods=['GET', 'POST'])
+@views.route('/about', methods=['GET'])
 def about():
     user_role = request.args.get('user_role')
     print("about",  user_role)
@@ -73,17 +118,38 @@ def contact():
     return render_template("contact.html", user=current_user, user_role=user_role)
 
 
-@views.route('/profile', methods=['GET', 'POST'])
+@views.route('/profile', methods=['GET'])
 def profile():
+    print(current_user.first_name)
+    user = User.query.filter_by(first_name=current_user.first_name).first()
     user_role = request.args.get('user_role')
     print("profile",  user_role)
     session['user_role'] = user_role
+    if user:
+        id = user.id
 
-    return render_template("profile.html", user=current_user, user_role=user_role)
+        user_detail = User.query.get(id)
+        print("user_detail",  user_detail)
+
+        user_data = {
+            "id": user_detail.id,
+            "name": user_detail.first_name,
+            "email": user_detail.email
+        }
+
+        return render_template("profile.html", results=user_data, user=current_user, user_role=user_role)
+    else:
+
+        return render_template("profile.html", results='Wrong User', user=current_user, user_role=user_role)
+
+###################### END DEFUALT ############################
+
+###################### START XAI ##############################
 
 
 @views.route('/XAI', methods=['GET', 'POST'])
 @login_required
+@user_role_required('user')
 def mainPage():
     user_role = request.args.get('user_role')
     print("mainPage",  user_role)
@@ -100,7 +166,7 @@ def mainPage():
 
 
 XAI_URLS = {
-    'User': ['http://193.40.154.160:8090/explain_lime/image'],
+    'User': ['http://193.40.154.143:8000/explain_lime/image'],
     'Developer': ['http://193.40.154.160:8090/explain_lime/image', 'http://193.40.154.143:8000/explain_shap/image', 'http://193.40.154.143:8000/explain_occlusion/image'],
     'Auditor': ['http://193.40.154.143:8000/explain_lime/image', 'http://193.40.154.143:8000/explain_shap/image', 'http://193.40.154.143:8000/explain_occlusion/image'],
     'Business': ['http://193.40.154.143:8000/explain_lime/image']
@@ -109,6 +175,7 @@ XAI_URLS = {
 
 @views.route('/explain', methods=['GET', 'POST'])
 @login_required
+@user_role_required('user')
 async def explain():
     user_role = session.get('user_role', None)
     print("explain",  user_role)
@@ -169,12 +236,29 @@ async def explain():
 
     return render_template('results.html', results=data_dict, user=current_user, user_role=user_role)
 
+###################### END XAI ##############################
 
-FAIR_URL = 'http://193.40.154.161:8083/explain_fairness/file'
+###################### START FAIRNESS #################################
+
+
+@views.route('/fairness', methods=['GET', 'POST'])
+@login_required
+@user_role_required('user')
+def fairness():
+    user_role = request.args.get('user_role')
+    print("fairness",  user_role)
+    session['user_role'] = user_role
+
+    return render_template("Fairness/fairness.html", user=current_user, user_role=user_role)
+
+
+# 193.40.154.161:31057 - Fairness
+FAIR_URL = 'http://193.40.154.143:8000/explain_fairness/file'
 
 
 @views.route('/explainFair', methods=['POST'])
 @login_required
+@user_role_required('user')
 async def explainFair():
     user_role = session.get('user_role', None)
 
@@ -184,6 +268,7 @@ async def explainFair():
         return f"Missing required field: {str(e)}", 400
 
     api_url = f"{FAIR_URL}"
+    print(ImageFile.content_type)
 
     try:
         async with ClientSession() as csession:
@@ -202,4 +287,30 @@ async def explainFair():
         print(f"API call to {api_url} failed with exception: {e}")
         return f"API call failed with exception: {e}", 500
 
-    return render_template('fairResults.html', results=result, user=current_user, user_role=user_role)
+    return render_template('Fairness/fairResults.html', results=result, user=current_user, user_role=user_role)
+
+###################### END FAIRNESS #################################
+
+
+###################### START MONTIMAGE ##############################
+
+@views.route('/networkTraffic', methods=['GET', 'POST'])
+@login_required
+@user_role_required('user')
+def networkTraffic():
+    user_role = request.args.get('user_role')
+    print("networkTraffic",  user_role)
+    session['user_role'] = user_role
+
+    return render_template("NT/networkTraffic.html", user=current_user, user_role=user_role)
+
+
+@views.route('/build/ac', methods=['GET', 'POST'])
+@login_required
+@user_role_required('user')
+def ac_build():
+    user_role = request.args.get('user_role')
+    print("ac_build",  user_role)
+    session['user_role'] = user_role
+
+    return render_template("NT/ac_build.html", user=current_user, user_role=user_role)

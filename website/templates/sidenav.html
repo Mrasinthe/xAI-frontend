@@ -1,6 +1,6 @@
 <body class="nav-open g-sidenav-show g-sidenav-pinned" style="min-height: 100vh;">
   <nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
-    <div class="scrollbar-inner">
+    <div class="scrollbar-inner ">
       <!-- Brand  sD_logo-->
       <div class="sidenav-header  align-items-center">
         <a class="navbar-brand" href="/">
@@ -13,6 +13,7 @@
           <!-- Nav items -->
           <ul class="navbar-nav">
             {% if user.is_authenticated %}
+            {% if user.user_role == 'user' %}
             <li class="nav-item">
               <a class="nav-link {% if 'index' in segment %} active {% endif %}" href="/">
                 <!-- <i class="ni ni-tv-2 text-primary"></i> -->
@@ -41,12 +42,13 @@
                 <span class="nav-link-text">Fairness</span>
               </a>
             </li>
+            {% else %}
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('auth.logout') }}">
                 <i class="ni ni-button-power text-red"></i>
                 <span class="nav-link-text">Logout</span>
               </a>
-            </li> {% else %}
+            </li>{% endif %} {% else %}
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('auth.login') }}">
                 <i class="ni ni-key-25 text-info"></i>
