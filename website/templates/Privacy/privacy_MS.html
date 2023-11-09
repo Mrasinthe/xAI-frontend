@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}
+Privacy
+{% endblock %}
+
+{% block content %}
+<div class="container2" style="margin-top: 10px">
+    &nbsp;
+    <a href="/dashboard?user_role={{ user_role }}" class="nav-link-text">Back</a>
+    {% if user_role %}
+    &nbsp;<h4 style="color: black;"> ROLE : {{user_role}}</h4>
+    {% else %}
+    &nbsp; <h4 class="nav-link-text text-red"> ROLE - Select a User Role</h4>
+    {% endif %}
+</div>
+<br />
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Add some styles to the file input container */
+        .custom-file-input {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Style the file input itself */
+        input[type="file"] {
+            position: absolute;
+            background-color: rgb(148, 142, 142);
+            font-size: 10px;
+            opacity: 0;
+        }
+
+        /* Loader CSS */
+        .arrow {
+            cursor: pointer;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #6e85d2;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .container2 h4 {
+            margin-left: 8px;
+            margin-top: 8px;
+            /* Adjust the value as needed */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container2" style="border-radius: 25px; box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);">
+        <div class="card rounded p-5 shadow">
+            <h3 class="text-center">Privacy Microservices Interface</h3><br>
+            <form action="/privacy?user_role={{ user_role }}" method="post" onsubmit="showLoader()"
+                enctype="application/json">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="clientSamplingRate" style="color: black;">Client
+                                Sampling Rate:</label>
+                            <input type="number" name="clientSamplingRate" id="clientSamplingRate" class="form-control"
+                                step="0.01" value="0.5">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="clippingValue" style="color: black;">Clipping
+                                Value:</label>
+                            <input type="number" name="clippingValue" id="clippingValue" step="0.01"
+                                class="form-control" value="15.5">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="delta" style="color: black;">Delta:</label>
+                            <input type="number" name="delta" id="delta" step="0.01" value="0.01" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="epsilon" style="color: black;">Epsilon:</label>
+                            <input type="number" name="epsilon" id="epsilon" step="0.01" value="5" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="modelParameters1" style="color: black;">Model
+                                Parameter 1:</label>
+                            <input type="number" name="modelParameters1" id="modelParameters1" step="0.01" value="1"
+                                class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="modelParameters2" style="color: black;">Model
+                                Parameter 2:</label>
+                            <input type="number" name="modelParameters2" id="modelParameters2" step="0.01" value="1"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="noiseType" style="color: black;">Noise Type:</label>
+                            <input type="number" name="noiseType" id="noiseType" step="1" value="1"
+                                class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="sigma" style="color: black;">Sigma:</label>
+                            <input type="number" name="sigma" id="sigma" step="0.01" value="1.2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="totalFLRounds" style="color: black;">Total FL
+                                Rounds:</label>
+                            <input type="number" name="totalFLRounds" id="totalFLRounds" value="100"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary" id="explainButton">Submit</button>
+                </div>
+                <br /><br />
+                <div id="LoadingExplanations"></div>
+                <div id="result">
+                    {% if results %}
+                    <h4>Results:</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Noisy Weights</th>
+                                <th>Sigma</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ results.noisyWeights[0][0][0] }} , {{ results.noisyWeights[0][0][1] }}</td>
+                                <td>{{ results.sigma }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    const LoadingExplanations = document.getElementById('LoadingExplanations');
+    const explainButton = document.getElementById('explainButton');
+
+    // Function to show the loader
+    function showLoader() {
+        // Display the loading spinner
+        LoadingExplanations.innerHTML = '<div class="loader"></div>';
+
+        // Add a delay to simulate server response time (remove this line in your actual implementation)
+        setTimeout(() => {
+            LoadingExplanations.innerHTML = ''; // Remove the loader after the form is submitted
+        }, 300000); // Replace 3000 with the actual server response time in milliseconds
+    }
+
+    // Add a click event listener to the button
+    explainButton.addEventListener('click', function () {
+        showLoader();
+    });
+
+
+</script>
+
+</html>
+{% endblock %}

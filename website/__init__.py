@@ -21,7 +21,7 @@ def create_app():
     app.config[
         'SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:postgres@localhost:5432/{DB_NAME}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SQLALCHEMY_POOL_SIZE'] = 100000
+    app.config['SQLALCHEMY_POOL_SIZE'] = 2000000
     db = SQLAlchemy(app)
     ma = Marshmallow(app)
     db.init_app(app)

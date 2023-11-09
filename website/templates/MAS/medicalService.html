@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Network Traffic
+Medical Analysis
 {% endblock %}
 
 {% block content %}
@@ -150,11 +150,6 @@ Network Traffic
 
     <script type="text/javascript">
 
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
-            const date = new Date(dateString);
-            return date.toLocaleDateString(undefined, options);
-        }
 
 
 
@@ -183,69 +178,21 @@ Network Traffic
 
     <div style="text-align: center; font-size:larger">
 
-        <p style="text-align: center; font-size:larger"> <b> Network Traffic </b></p>
+        <p style="text-align: center; font-size:larger"> <b> Medical Analysis Service </b></p>
 
     </div>
 
-    {% include 'NT/ntNavbar.html' %}
+    {% include 'MAS/masNavbar.html' %}
 
 
     <br />
-    <h1>All Models</h1>
-    <table>
-        <tr>
-            <td class="toggle-cell2"></td>
-            <th>Model Id</th>
-            <th>Buildt At</th>
-            <th>Training Dataset</th>
-            <th>Testing Dataset</th>
-            <th>Actions</th>
-        </tr>
-        {% for model in models['models'] %}
-        <tr class="model-row">
-            <td class="toggle-cell">+</td>
-            <td>{{ model['modelId'] }}</td>
-            <td>{{ (model['lastBuildAt']) }}</td>
-            <td>{{ model['lastBuildAt'] }}</td>
-            <td>{{ model['lastBuildAt'] }}</td>
-            <td>{{ model['lastBuildAt'] }}</td>
-        </tr>
-        <tr class="build-config-row" style="display: none;">
-            <td colspan="5">
-                <div class="build-config-content">
-                    <p style="margin: 0">
-                    <h3><b>Build config:</b></h3>
-                    <pre style="font-size: 14px;">
-                        {{ model['buildConfig']}}
-                    </pre>
-                    </p>
-                </div>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    <div class="card-body">
-        <button id="deleteButton"><i class="fas fa-trash-alt"></i> Delete All Models</button>
-    </div>
+
+
 
 
     <script type="text/javascript">
 
 
-        document.getElementById('deleteButton').addEventListener('click', function () {
-            if (window.confirm('Are you sure you want to delete this item?')) {
-                // User confirmed, send an AJAX request to Flask
-                fetch('/delete_models?user_role={{ user_role }}', {
-                    method: 'POST',
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.message);
-                        // You can also redirect to a different page if needed.
-                    });
-                location.reload();
-            }
-        });
 
 
 

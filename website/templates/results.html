@@ -553,10 +553,12 @@
 
 
     //top_plot
-    var top_labels_namesJSON = ' {{ results["top_labels_names"] | tojson | safe }}';
+    // var top_labels_namesJSON = ' { results["top_labels_names"] | tojson | safe }}';
+    var top_labels_namesJSON = '{{ results["top_labels_names"] | default("[]") | tojson | safe }}';
     var top_labels_names = JSON.parse(top_labels_namesJSON);
     // results.top_labels_names; 
-    var scoresJSON = '{{ results["scores"] | tojson | safe }}';
+    // var scoresJSON = '{ results["scores"] | tojson | safe }}';
+    var scoresJSON = '{{ results["scores"] | default("[]") | tojson | safe }}';
     var scores = JSON.parse(scoresJSON);
     // results.scores;
     console.log('Scores:', scores);

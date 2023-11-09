@@ -1,0 +1,69 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-body text-white">
+                    <h3 class="card-title" align="center">Generate default explanation for MI detection
+                        emergency use case</h3>
+                    <form action="/emergencyExplain?user_role={{ user_role }}" method="post" id="emergencyExplainForm"
+                        onsubmit="showLoader()" enctype="application/json">
+
+
+                        <div class="form-group">
+                            <label for="dat2" style="color: black;">dat:</label>
+                            <input type="text" name="dat2" id="dat2" class="form-control" required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="hea2" style="color: black;">hea:</label>
+                            <input type="text" name="hea2" id="hea2" class="form-control" required>
+                        </div>
+
+
+
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary" id="explainButton2">Submit</button>
+                        </div>
+                        <br /><br />
+                        <div id="LoadingExplanations"></div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-body text-white">
+                    <h3 class="card-title" align="center">Results</h3>
+                    <div id="result" style="color:black;">
+                        {% if results2 %}
+                        <div id="segment_overlay_base64" class="image-container image-item"></div>
+                        <!-- Display results here in a similar format as "Detect MI Emergencies" -->
+
+
+                        {% endif %}
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    //Emergency Explain
+    const segment_overlay_base64 = document.getElementById('segment_overlay_base64');
+    const segment_overlay = '{{ results2 }}';
+
+    const image = document.createElement('img');
+    image.src = `data:image/jpeg;base64,${segment_overlay}`;
+    segment_overlay_base64.innerHTML = '';
+    segment_overlay_base64.appendChild(image);
+
+</script>

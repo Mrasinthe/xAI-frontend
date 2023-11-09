@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block title %}
+Energency Detection
+{% endblock %}
+
+{% block content %}
+<div class="container2" style="margin-top: 10px">
+    &nbsp;
+    <a href="/dashboard?user_role={{ user_role }}" class="nav-link-text">Back</a>
+    {% if user_role %}
+    &nbsp;<h4 style="color: black;"> ROLE : {{user_role}}</h4>
+    {% else %}
+    &nbsp; <h4 class="nav-link-text text-red"> ROLE - Select a User Role</h4>
+    {% endif %}
+</div>
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <title>Results for Role: </title>
+    <style>
+        /* Basic styling for the navigation bar */
+        ul.navbar {
+            list-style-type: none;
+            margin: 0;
+            margin-right: 60;
+            padding: 0;
+            background-color: rgb(44, 54, 78);
+            display: flex;
+        }
+
+        li.navitem {
+            position: relative;
+            float: left;
+
+        }
+
+        li.navitem a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li.navitem a:hover {
+            background-color: rgb(51, 62, 126);
+        }
+
+        /* Submenu styling */
+        ul.submenu {
+            display: none;
+            background-color: #333;
+            list-style-type: none;
+            padding: 0;
+            position: absolute;
+        }
+
+        li.navitem.active .submenu {
+            display: inline;
+        }
+
+        li.navitem .submenu a {
+            display: block;
+            padding: 10px;
+        }
+
+        select#selectOption {
+            color: white;
+            margin-left: 10%;
+            padding-left: 0%;
+            background-color: rgb(44, 54, 78);
+            /* Match the navbar background color */
+        }
+
+        select#selectOption:hover {
+            color: white;
+            background-color: rgb(51, 62, 126);
+            /* Match the navbar background color */
+        }
+
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+            align-items: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        th:first-child {
+            width: 10%;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
+
+        button {
+            margin-top: 10px;
+            margin-bottom: 16px;
+            padding: 10px 20px;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #cc0000;
+        }
+
+        .toggle-cell {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Style for the build-config content */
+        .build-config-content {
+            margin-left: 20px;
+            /* Indent for better readability */
+        }
+
+        /* Add styles for the tab header */
+        .tab-header {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: left;
+            margin-top: 5px;
+        }
+
+        .tab-header-item {
+            cursor: pointer;
+            padding: 2px 8px;
+            background-color: rgb(164, 167, 185);
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            color: white;
+        }
+
+        .tab-header-item.active {
+            background-color: #EEEEEE;
+            color: black;
+
+        }
+
+        .tab-header-item:hover {
+            background-color: rgb(98, 104, 184);
+        }
+
+        .image-item {
+            display: block;
+            margin: auto;
+        }
+
+        .image-container {
+            /* Increase the height to your desired value */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            /* max-height: 100%; */
+            object-fit: cover;
+
+            /* rotate: calc(90deg); */
+        }
+
+        .image-popup {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
+
+        .image-popup img {
+            max-width: 100%;
+            max-height: 100%;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+
+
+
+
+        $(document).ready(function () {
+            $('.toggle-cell').on('click', function () {
+                var modelRow = $(this).closest('.model-row');
+                var buildConfigRow = modelRow.next('.build-config-row');
+                var icon = $(this);
+
+                if (buildConfigRow.is(':visible')) {
+                    buildConfigRow.hide();
+                    icon.text('+');
+                } else {
+                    buildConfigRow.show();
+                    icon.text('-');
+                }
+            });
+        });
+
+
+
+
+
+    </script>
+
+
+    <div style="text-align: center; font-size:larger">
+
+        <p style="text-align: center; font-size:larger"> <b> Medical Analysis - Lead Importance</b></p>
+
+    </div>
+
+    {% include 'MAS/masNavbar.html' %}
+    </br>
+    <div class="tab-content" id="metric1">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card">
+                        <div class="card-body text-white">
+                            <h3 class="card-title" align="center">
+                                Generate explanation (highlighting the relevant leads) for the provided ECG signal
+                                applying the specified XAI method on the specified model.</h3>
+                            <form action="/leadImportance?user_role={{ user_role }}" method="post"
+                                id="emergencyDetectionForm" onsubmit="showLoader()" enctype="application/json">
+
+
+                                <div class="form-group">
+                                    <label for="dat" style="color: black;">dat:</label>
+                                    <input type="text" name="dat" id="dat" class="form-control" required>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="hea" style="color: black;">hea:</label>
+                                    <input type="text" name="hea" id="hea" class="form-control" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="xai_method" style="color: black;">XAI Method:</label>
+                                    <select id="xai_method" name="xai_method" class="form-control">
+                                        <option value="shap">Shap</option>
+                                        <option value="gradCam">GradCam</option>
+
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="model_id" style="color: black;">Model Id:</label>
+                                    <input type="model_id" name="model_id" id="model_id" class="form-control">
+                                </div>
+
+
+
+
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary" id="explainButton">Submit</button>
+                                </div>
+                                <br /><br />
+                                <div id="LoadingExplanations"></div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-8 mb-12">
+                    <div class="card">
+                        <div class="card-body ">
+                            <h3 class="card-title ">Results</h3>
+                            <!-- align="center" -->
+                            <div id="result" style="color:black;">
+                                {% if results %}
+                                <div id="segment_overlay_base64" class="image-container image-item"></div>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <script type="text/javascript">
+
+        //Emergency Explain
+        const segment_overlay_base64 = document.getElementById('segment_overlay_base64');
+        const segment_overlay = '{{ results }}';
+
+        const image = document.createElement('img');
+        image.src = `data:image/jpeg;base64,${segment_overlay}`;
+        segment_overlay_base64.innerHTML = '';
+        segment_overlay_base64.appendChild(image);
+
+
+        // Get all tab headers and content containers
+        const tabHeaders = document.querySelectorAll('.tab-header-item');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Add a click event listener to each tab header
+        tabHeaders.forEach((tabHeader) => {
+            tabHeader.addEventListener('click', () => {
+                // Hide all tab contents
+                tabContents.forEach((tabContent) => {
+                    tabContent.style.display = 'none';
+                });
+
+                // Show the selected tab content
+                const tabId = tabHeader.getAttribute('data-tab');
+                const tabContent = document.getElementById(tabId);
+                if (tabContent) {
+                    tabContent.style.display = 'block';
+                }
+
+                // Update the active tab header
+                tabHeaders.forEach((header) => {
+                    header.classList.remove('active');
+                });
+                tabHeader.classList.add('active');
+            });
+        });
+
+        // Show the initial tab content
+        tabHeaders[0].click();
+
+
+
+
+
+
+
+
+        /////////////////////////////////////////////////////
+        // Get all elements with the common class 'image-item'
+        const imageItems = document.querySelectorAll('.image-item');
+
+        // Add a click event listener to each image item
+        imageItems.forEach((imageItem) => {
+            imageItem.addEventListener('click', () => {
+                const image = imageItem.querySelector('img');
+                const src = image.src;
+                openImagePopup(src);
+            });
+        });
+
+
+        // Function to open the image in a popup
+        function openImagePopup(src) {
+            const popup = document.createElement('div');
+            popup.classList.add('image-popup');
+
+            const image = document.createElement('img');
+            image.src = src;
+
+            const closeBtn = document.createElement('span');
+            closeBtn.textContent = 'X';
+            closeBtn.classList.add('close-btn');
+            closeBtn.addEventListener('click', () => {
+                document.body.removeChild(popup);
+            });
+
+            // Close the popup when clicking on the overlay (background)
+            popup.addEventListener('click', (event) => {
+                if (event.target === popup) {
+                    document.body.removeChild(popup);
+                }
+            });
+
+            popup.appendChild(image);
+            popup.appendChild(closeBtn);
+            document.body.appendChild(popup);
+        }
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+{% endblock %}

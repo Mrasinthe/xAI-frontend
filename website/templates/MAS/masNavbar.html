@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+        /* Basic styling for the navigation bar */
+        ul.navbar {
+            list-style-type: none;
+            margin: 0;
+            margin-right: 60;
+            padding: 0;
+            background-color: rgb(44, 54, 78);
+            display: flex;
+            /* z-index: 2; */
+        }
+
+        li.navitem {
+            position: relative;
+            float: left;
+
+        }
+
+        li.navitem a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li.navitem a:hover {
+            background-color: rgb(51, 62, 126);
+        }
+
+        /* Submenu styling */
+        ul.submenu {
+            display: none;
+            background-color: #333;
+            list-style-type: none;
+            padding: 0;
+            position: relative;
+            top: 100%;
+            /* Position the submenu above the parent */
+            left: 0;
+            /* Adjust the horizontal position as needed */
+        }
+
+        li.navitem.active .submenu {
+            display: inline;
+            position: relative;
+        }
+
+        li.navitem .submenu a {
+            display: block;
+            padding: 10px;
+            position: flex;
+        }
+
+        select#selectOption {
+            color: white;
+            margin-left: 10%;
+            padding-left: 0%;
+            background-color: rgb(44, 54, 78);
+            /* Match the navbar background color */
+        }
+
+        select#selectOption:hover {
+            color: white;
+            background-color: rgb(51, 62, 126);
+            /* Match the navbar background color */
+        }
+
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        th:first-child {
+            width: 20%;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
+
+        button {
+            margin-top: 10px;
+            margin-bottom: 16px;
+            padding: 10px 20px;
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <ul class="navbar" style="position: relative;">
+
+
+
+        <li class="navitem">
+            <a id="buildLink" href="#">Emergency Detection</a>
+
+            <ul class="submenu">
+                <li class="navitem">
+                    <a href="/emergencyDetection?user_role={{ user_role }}">Detect MI Emergencies</a>
+                </li>
+                <li class=" navitem">
+                    <a href="/emergencyDetection?user_role={{ user_role }}">Generate Explanations</a>
+                </li>
+                <li class=" navitem">
+                    <a href="/emergencyDetection?user_role={{ user_role }}">Demo</a>
+                </li>
+
+            </ul>
+        </li>
+        <li class=" navitem">
+            <!-- <a  href="/medicalAnalysis?user_role={{ user_role }}">Metrics</a> -->
+            <a id="buildLink" href="#">Medical Analysis</a>
+            <ul class="submenu">
+                <li class="navitem">
+                    <a href="/medicalAnalysis?user_role={{ user_role }}">Visualize ECG</a>
+                </li>
+                <li class="navitem">
+                    <a href="/identifySegments?user_role={{ user_role }}">Identify Segments</a>
+                </li>
+                <li class=" navitem">
+                    <a href="/tickImportance?user_role={{ user_role }}">Tick Importance</a>
+                </li>
+                <li class="navitem">
+                    <a href="/timeImportance?user_role={{ user_role }}">Time Importance </a>
+                </li>
+                <li class=" navitem">
+                    <a href="/leadImportance?user_role={{ user_role }}">Lead Importance</a>
+                </li>
+            </ul>
+        </li>
+        <li class="navitem">
+            <a id="buildLink" href="/ac/build?user_role={{ user_role }}">Model Administration & Application</a>
+        </li>
+
+    </ul>
+    <div hidden id="selectedValue"></div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <script type="text/javascript">
+
+
+
+
+        // Add JavaScript to toggle submenu visibility on parent item click
+        const navItems = document.querySelectorAll(".navitem");
+
+        navItems.forEach((item) => {
+            item.addEventListener("click", function (event) {
+                event.stopPropagation(); // Prevent event propagation
+
+                if (item.classList.contains("active")) {
+                    item.classList.remove("active");
+                } else {
+                    navItems.forEach((navItem) => navItem.classList.remove("active"));
+                    item.classList.add("active");
+                }
+            });
+        });
+
+        // Close submenu when clicking outside the menu
+        document.addEventListener("click", function () {
+            navItems.forEach((navItem) => navItem.classList.remove("active"));
+        });
+
+        // Prevent closing the submenu when clicking inside it
+        document.querySelector(".navbar").addEventListener("click", function (event) {
+            event.stopPropagation();
+        });
+
+
+
+
+
+    </script>
+
+</body>
+
+</html>
